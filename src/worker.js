@@ -1212,10 +1212,10 @@ function getScript() {
         
         if (mode === 'encode') {
           document.getElementById('urlEncodeSection').style.display = 'block';
-          document.querySelector('.option-btn[onclick="switchUrlMode(\'encode\')"]').classList.add('active');
+          document.querySelector('.option-btn[onclick="switchUrlMode(\\'encode\\')"]').classList.add('active');
         } else {
           document.getElementById('urlDecodeSection').style.display = 'block';
-          document.querySelector('.option-btn[onclick="switchUrlMode(\'decode\')"]').classList.add('active');
+          document.querySelector('.option-btn[onclick="switchUrlMode(\\'decode\\')"]').classList.add('active');
         }
         
         // 隐藏之前的结果
@@ -1356,7 +1356,7 @@ function getScript() {
         document.querySelectorAll('.option-btn').forEach(btn => {
           btn.classList.remove('active');
         });
-        document.querySelector(`.option-btn[onclick="selectHashAlgorithm('${algorithm}')"]`).classList.add('active');
+        document.querySelector(\`.option-btn[onclick="selectHashAlgorithm(\\'\${algorithm}\\')"]\`).classList.add('active');
         
         // 更新算法标签
         document.getElementById('hashAlgorithmLabel').textContent = algorithm.toUpperCase();
@@ -1556,7 +1556,7 @@ function getScript() {
         document.querySelectorAll('.option-btn').forEach(btn => {
           btn.classList.remove('active');
         });
-        document.querySelector(`.option-btn[onclick="jsonFormat('${action}')"]`).classList.add('active');
+        document.querySelector(\`.option-btn[onclick="jsonFormat('\${action}')"]\`).classList.add('active');
         window.currentJsonAction = action;
       };
 
