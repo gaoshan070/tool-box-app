@@ -1,0 +1,21 @@
+name = "toolbox"
+compatibility_date = "2023-10-01"
+compatibility_flags = ["nodejs_compat"]
+
+# 本地开发配置
+[env.development]
+# 空配置，使用本地开发
+
+# 生产环境配置（可选）
+[env.production]
+pages_build_output_dir = "./dist"
+
+# 环境变量
+[vars]
+APP_NAME = "toolbox"
+APP_VERSION = "1.0.0"
+MAX_FILE_SIZE = "5242880"  # 5MB
+
+
+[limits]
+cpu_ms = 10000
