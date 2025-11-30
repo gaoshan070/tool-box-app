@@ -1,7 +1,7 @@
 name = "toolbox"
 compatibility_date = "2023-10-01"
 compatibility_flags = ["nodejs_compat"]
-
+main = "src/worker.js"
 # 本地开发配置
 [env.development]
 # 空配置，使用本地开发
