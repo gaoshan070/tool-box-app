@@ -1040,8 +1040,8 @@ function getScript() {
                 const toolCard = document.createElement('div');
                 toolCard.className = 'tool-card';
                 toolCard.innerHTML = \`
-                <h3>${tool.icon} ${tool.name}</h3>
-                <p>${tool.description}</p>
+                <h3>\${tool.icon} \${tool.name}</h3>
+                <p>\${tool.description}</p>
                 \`;
                 toolCard.addEventListener('click', () => showTool(tool.id));
                 toolsGrid.appendChild(toolCard);
@@ -1067,13 +1067,66 @@ function getScript() {
             const tool = tools.find(t => t.id === toolId);
             toolContent.innerHTML = \`
                 <div class="tool-panel">
-                <h2>${tool.icon} ${tool.name}</h2>
-                <p class="description">${tool.description}</p>
+                <h2>\${tool.icon} \${tool.name}</h2>
+                <p class="description">\${tool.description}</p>
                 <div id="toolInterface"></div>
                 </div>
             \`;
 
-            
-        }      
+            // 加载具体工具界面
+            loadToolInterface(toolId);
+        }
+
+        // 加载工具界面
+        function loadToolInterface(toolId) {
+            const interfaceDiv = document.getElementById('toolInterface');
+        
+            switch (toolId) {
+                case 'base64':
+                    interfaceDiv.innerHTML = getBase64Interface();
+                    initBase64Tool();
+                    break;
+                case 'json':
+                    interfaceDiv.innerHTML = getJsonInterface();
+                    initJsonTool();
+                    break;
+                case 'url':
+                    interfaceDiv.innerHTML = getUrlInterface();
+                    initUrlTool();
+                    break;
+                case 'hash':
+                    interfaceDiv.innerHTML = getHashInterface();
+                    initHashTool();
+                    break;
+                case 'jwt':
+                    interfaceDiv.innerHTML = getJwtInterface();
+                    initJwtTool();
+                    break;
+                case 'timestamp':
+                    interfaceDiv.innerHTML = getTimestampInterface();
+                    initTimestampTool();
+                    break;
+                case 'uuid':
+                    interfaceDiv.innerHTML = getUuidInterface();
+                    initUuidTool();
+                    break;
+                case 'qr':
+                    interfaceDiv.innerHTML = getQrInterface();
+                    initQrTool();
+                    break;
+                case 'cron':
+                    interfaceDiv.innerHTML = getCronInterface();
+                    initCronTool();
+                    break;
+                case 'color':
+                    interfaceDiv.innerHTML = getColorInterface();
+                    initColorTool();
+                    break;
+                case 'yaml':
+                    interfaceDiv.innerHTML = getYamlInterface();
+                    initYamlTool();
+                    break;
+            }
+        }
     `;
 }
