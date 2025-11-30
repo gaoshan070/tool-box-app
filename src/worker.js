@@ -1128,5 +1128,543 @@ function getScript() {
                     break;
             }
         }
+
+        // Base64 工具界面
+    function getBase64Interface() {
+      return \`
+        <div class="option-group">
+          <button class="option-btn active" onclick="switchBase64Mode('encode')">编码</button>
+          <button class="option-btn" onclick="switchBase64Mode('decode')">解码</button>
+        </div>
+        
+        <div id="base64EncodeSection">
+          <div class="input-group">
+            <label>输入文本</label>
+            <textarea class="textarea" id="base64InputText" placeholder="输入要编码的文本..."></textarea>
+          </div>
+          
+          <div class="file-upload" onclick="document.getElementById('base64FileInput').click()">
+            <p>📁 或拖放文件到这里</p>
+            <input type="file" id="base64FileInput" style="display: none" onchange="handleBase64FileSelect(this.files[0])">
+          </div>
+          
+          <button class="btn" onclick="base64Encode()">编码</button>
+        </div>
+        
+        <div id="base64DecodeSection" style="display: none">
+          <div class="input-group">
+            <label>Base64 字符串</label>
+            <textarea class="textarea" id="base64DecodeInput" placeholder="输入要解码的 Base64 字符串..."></textarea>
+          </div>
+          <button class="btn" onclick="base64Decode()">解码</button>
+        </div>
+        
+        <div class="result-area" id="base64Result" style="display: none">
+          <h3>结果</h3>
+          <pre class="result-pre" id="base64ResultText"></pre>
+          <button class="btn" onclick="copyResult('base64ResultText')" style="margin-top: 12px">复制结果</button>
+        </div>
+      \`;
+    }
+
+    //Encode url interface
+    // URL 工具界面
+    function getUrlInterface() {
+      return \`
+        <div class="option-group">
+          <button class="option-btn active" onclick="switchUrlMode('encode')">URL 编码</button>
+          <button class="option-btn" onclick="switchUrlMode('decode')">URL 解码</button>
+        </div>
+        
+        <div id="urlEncodeSection">
+          <div class="input-group">
+            <label>输入文本（需要编码）</label>
+            <textarea class="textarea" id="urlEncodeInput" placeholder="输入需要URL编码的文本..."></textarea>
+          </div>
+          <button class="btn" onclick="urlEncode()">编码</button>
+        </div>
+        
+        <div id="urlDecodeSection" style="display: none">
+          <div class="input-group">
+            <label>URL 编码字符串（需要解码）</label>
+            <textarea class="textarea" id="urlDecodeInput" placeholder="输入需要URL解码的字符串..."></textarea>
+          </div>
+          <button class="btn" onclick="urlDecode()">解码</button>
+        </div>
+        
+        <div class="result-area" id="urlResult" style="display: none">
+          <h3>结果</h3>
+          <pre class="result-pre" id="urlResultText"></pre>
+          <button class="btn" onclick="copyResult('urlResultText')" style="margin-top: 12px">复制结果</button>
+        </div>
+      \`;
+    }
+
+    // 初始化 URL 工具
+    function initUrlTool() {
+      window.switchUrlMode = function(mode) {
+        document.querySelectorAll('#urlEncodeSection, #urlDecodeSection').forEach(el => {
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        if (mode === 'encode') {
+          document.getElementById('urlEncodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchUrlMode(\'encode\')"]').classList.add('active');
+        } else {
+          document.getElementById('urlDecodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchUrlMode(\'decode\')"]').classList.add('active');
+        }
+        
+        // 隐藏之前的结果
+        document.getElementById('urlResult').style.display = 'none';
+      };
+
+      window.urlEncode = async function() {
+        const text = document.getElementById('urlEncodeInput').value.trim();
+        
+        if (!text) {
+          showError('urlResult', '请输入需要编码的文本');
+          return;
+        }
+        
+        try {
+          showLoading('urlResult', true);
+          const result = await callApi('url-encode', { text });
+          showResult('urlResult', result.encoded || result.result);
+        } catch (error) {
+          showError('urlResult', error.message);
+        } finally {
+          showLoading('urlResult', false);
+        }
+      };
+
+      window.urlDecode = async function() {
+        const text = document.getElementById('urlDecodeInput').value.trim();
+        
+        if (!text) {
+          showError('urlResult', '请输入需要解码的URL编码字符串');
+          return;
+        }
+        
+        try {
+          showLoading('urlResult', true);
+          const result = await callApi('url-decode', { text });
+          showResult('urlResult', result.decoded || result.result);
+        } catch (error) {
+          showError('urlResult', error.message);
+        } finally {
+          showLoading('urlResult', false);
+        }
+      };
+    }
+
+    // 显示/隐藏加载状态
+    function showLoading(containerId, show) {
+      const container = document.getElementById(containerId);
+      let loadingElement = document.getElementById(containerId + 'Loading');
+      
+      if (show) {
+        if (!loadingElement) {
+          loadingElement = document.createElement('div');
+          loadingElement.id = containerId + 'Loading';
+          loadingElement.className = 'loading active';
+          loadingElement.innerHTML = \`
+            <div class="spinner"></div>
+            <p>处理中...</p>
+          \`;
+          container.parentNode.insertBefore(loadingElement, container);
+        } else {
+          loadingElement.className = 'loading active';
+        }
+        container.style.display = 'none';
+      } else {
+        if (loadingElement) {
+          loadingElement.className = 'loading';
+        }
+      }
+    }
+    //End of url interface
+
+    //Harsh interface
+    // 哈希生成器工具界面
+    function getHashInterface() {
+  return \`
+    <div class="input-group">
+      <label>输入文本</label>
+      <textarea class="textarea" id="hashInput" placeholder="输入需要生成哈希值的文本..."></textarea>
+    </div>
+    
+    <div class="input-group">
+      <label>选择哈希算法</label>
+      <div class="option-group">
+        <button class="option-btn active" onclick="selectHashAlgorithm('md5')">MD5</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha1')">SHA1</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha256')">SHA256</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha512')">SHA512</button>
+      </div>
+    </div>
+    
+    <div class="file-upload" onclick="document.getElementById('hashFileInput').click()">
+      <p>📁 或拖放文件到这里生成文件哈希</p>
+      <input type="file" id="hashFileInput" style="display: none" onchange="handleHashFileSelect(this.files[0])">
+    </div>
+    
+    <button class="btn" onclick="generateHash()">生成哈希值</button>
+    
+    <div class="result-area" id="hashResult" style="display: none">
+      <h3>哈希结果</h3>
+      <div style="margin-bottom: 12px;">
+        <strong>算法:</strong> <span id="hashAlgorithmLabel">MD5</span>
+      </div>
+      <pre class="result-pre" id="hashResultText"></pre>
+      <button class="btn" onclick="copyResult('hashResultText')" style="margin-top: 12px">复制哈希值</button>
+    </div>
+    
+    <div class="feature-list" style="margin-top: 40px;">
+      <div class="feature">
+        <h3>MD5</h3>
+        <p>128位哈希值，常用于文件校验</p>
+      </div>
+      <div class="feature">
+        <h3>SHA1</h3>
+        <p>160位哈希值，安全性高于MD5</p>
+      </div>
+      <div class="feature">
+        <h3>SHA256</h3>
+        <p>256位哈希值，比特币使用</p>
+      </div>
+      <div class="feature">
+        <h3>SHA512</h3>
+        <p>512位哈希值，最高安全性</p>
+      </div>
+    </div>
+  \`;
+}
+
+    // 初始化哈希工具
+    function initHashTool() {
+      window.currentHashAlgorithm = 'md5';
+      window.currentHashFile = null;
+
+      window.selectHashAlgorithm = function(algorithm) {
+        window.currentHashAlgorithm = algorithm;
+        
+        // 更新按钮状态
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`.option-btn[onclick="selectHashAlgorithm('${algorithm}')"]`).classList.add('active');
+        
+        // 更新算法标签
+        document.getElementById('hashAlgorithmLabel').textContent = algorithm.toUpperCase();
+      };
+
+      window.handleHashFileSelect = function(file) {
+        if (!file) return;
+        
+        window.currentHashFile = file;
+        document.getElementById('hashInput').value = \`文件已选择: \${file.name} (\${(file.size / 1024).toFixed(2)} KB)\`;
+      };
+
+      window.generateHash = async function() {
+        const text = document.getElementById('hashInput').value.trim();
+        const algorithm = window.currentHashAlgorithm;
+        const file = window.currentHashFile;
+        
+        if (!text && !file) {
+          showError('hashResult', '请输入文本或选择文件');
+          return;
+        }
+        
+        try {
+          showLoading('hashResult', true);
+          
+          let requestData;
+          if (file) {
+            // 处理文件哈希
+            const fileBuffer = await readFileAsArrayBuffer(file);
+            requestData = {
+              algorithm: algorithm,
+              file: arrayBufferToBase64(fileBuffer),
+              fileName: file.name
+            };
+          } else {
+            // 处理文本哈希
+            requestData = {
+              algorithm: algorithm,
+              text: text
+            };
+          }
+          
+          const result = await callApi('hash-generate', requestData);
+          showResult('hashResult', result.hash || result.result);
+          
+          // 确保算法标签是最新的
+          document.getElementById('hashAlgorithmLabel').textContent = algorithm.toUpperCase();
+          
+        } catch (error) {
+          showError('hashResult', error.message);
+        } finally {
+          showLoading('hashResult', false);
+        }
+      };
+
+      // 读取文件为ArrayBuffer
+      window.readFileAsArrayBuffer = function(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            resolve(e.target.result);
+          };
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
+      };
+
+      // 将ArrayBuffer转换为Base64
+      window.arrayBufferToBase64 = function(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+      };
+
+      // 添加拖放文件支持
+      const toolContent = document.getElementById('toolContent');
+      toolContent.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '#f0f9ff';
+      });
+
+      toolContent.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '';
+      });
+
+      toolContent.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleHashFileSelect(files[0]);
+        }
+      });
+    }
+    //End of harsh interface
+
+    // 搜索功能
+    function initSearch() {
+      toolSearch.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll('.tool-card').forEach(card => {
+          const toolName = card.querySelector('h3').textContent.toLowerCase();
+          const toolDesc = card.querySelector('p').textContent.toLowerCase();
+          if (toolName.includes(searchTerm) || toolDesc.includes(searchTerm)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    }
+
+    // API 调用函数
+    async function callApi(endpoint, data) {      
+        const response = await fetch(\`/api/\${endpoint}\`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
+        });
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          const parsedError = JSON.parse(errorText)
+          throw new Error(parsedError.error || \`Failed to call \${endpoint} API \`);
+        }
+        
+        return await response.json();      
+    }
+
+    // 工具初始化
+    function initBase64Tool() {
+      window.switchBase64Mode = function(mode) {
+        document.querySelectorAll('#base64EncodeSection, #base64DecodeSection').forEach(el => {
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        if (mode === 'encode') {
+          document.getElementById('base64EncodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchBase64Mode(\'encode\')"]').classList.add('active');
+        } else {
+          document.getElementById('base64DecodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchBase64Mode(\'decode\')"]').classList.add('active');
+        }
+      };
+
+      window.handleBase64FileSelect = async function(file) {
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const base64 = e.target.result;
+          document.getElementById('base64InputText').value = '文件已选择: ' + file.name;
+          window.currentFileBase64 = base64;
+        };
+        reader.readAsDataURL(file);
+      };
+
+      window.base64Encode = async function() {
+        const text = document.getElementById('base64InputText').value;
+        const file = window.currentFileBase64;
+        
+        try {
+          const result = await callApi('base64-encode', { text, file });
+          showResult('base64Result', \`编码结果: \${result.result}\`);
+        } catch (error) {
+          showError('base64Result', error.message);
+        }
+      };
+
+      window.base64Decode = async function() {
+        const base64 = document.getElementById('base64DecodeInput').value;
+        
+        try {
+          const result = await callApi('base64-decode', { base64 });
+          showResult('base64Result', \`解码结果: \${result.result}\`);
+        } catch (error) {
+          showError('base64Result', error.message);
+        }
+      };
+    }
+
+    function initJsonTool() {
+      window.jsonFormat = function(action) {
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`.option-btn[onclick="jsonFormat('${action}')"]`).classList.add('active');
+        window.currentJsonAction = action;
+      };
+
+      window.processJson = async function() {
+        const jsonData = document.getElementById('jsonInput').value;
+        const action = window.currentJsonAction || 'format';
+        
+        try {
+          const result = await callApi('json-format', { json: jsonData, action });
+          showResult('jsonResult', \${result.result});
+        } catch (error) {          
+          showError('jsonResult', error.message);
+        }
+      };
+    }
+    
+    function initJwtTool() {
+      window.decodeJwt = async function() {
+        const jwtToken = document.getElementById('jwtInput').value;
+        
+        try {
+          const result = await callApi('jwt-decode', { token: jwtToken });          
+          showResult('jwtResult', JSON.stringify(result, null, 2));
+        } catch (error) {
+          showError('jwtResult', error.message);
+        }
+      };
+
+      window.clearJwt = function() {
+        document.getElementById('jwtInput').value = '';
+        document.getElementById('jwtResult').style.display = 'none';
+        document.getElementById('jwt-error').style.display = 'none';
+      };
+
+    }
+    
+    // 显示结果
+    function showResult(containerId, content) {
+      const container = document.getElementById(containerId);
+      const resultText = document.getElementById(containerId + 'Text');
+      
+      resultText.textContent = content;
+      container.style.display = 'block';
+    }
+
+    // 显示错误
+    function showError(containerId, message) {
+      const container = document.getElementById(containerId);
+      const resultText = document.getElementById(containerId + 'Text');
+      
+      resultText.textContent = '错误: ' + message;
+      resultText.className = 'result-pre error-message';
+      container.style.display = 'block';
+    }
+
+    // 复制结果
+    function copyResult(elementId) {
+      const text = document.getElementById(elementId).textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('已复制到剪贴板！');
+      });
+    }
+
+    // 初始化
+    document.addEventListener('DOMContentLoaded', () => {
+      initToolsGrid();
+      initSearch();
+    });
+
+    // 其他工具界面函数模板
+    function getJsonInterface() {
+      return \`<div class="input-group">
+        <label>JSON 数据</label>
+        <textarea class="textarea" id="jsonInput" placeholder='输入 JSON 数据...'></textarea>
+      </div>
+      <div class="option-group">
+        <button class="option-btn active" onclick="jsonFormat('format')">格式化</button>
+        <button class="option-btn" onclick="jsonFormat('minify')">压缩</button>
+        <button class="option-btn" onclick="jsonFormat('validate')">验证</button>
+      </div>
+      <button class="btn" onclick="processJson()">处理</button>
+      <div class="result-area" id="jsonResult" style="display: none">
+        <h3>结果</h3>
+        <pre class="result-pre" id="jsonResultText"></pre>
+        <button class="btn" onclick="copyResult('jsonResultText')">复制结果</button>
+      </div>\`;
+    }
+
+    function getJwtInterface() {
+      return \`
+          <div class="input-group">
+              <label for="jwtInput">JWT Token</label>
+              <textarea class="textarea" id="jwtInput" placeholder="输入 JWT Token..."></textarea>
+          </div>
+
+          <div class="action-buttons" style="display: flex; gap: 12px; margin-bottom: 20px;">
+              <button class="btn" onclick="decodeJwt()" id="jwt-decode-btn">解析 JWT</button>
+              <button class="btn" style="background: #6b7280;" onclick="clearJwt()">清空</button>              
+          </div>
+
+         <div class="result-area" id="jwtResult" style="display: none">
+          <h3>结果</h3>
+          <pre class="result-pre" id="jwtResultText"></pre>
+          <button class="btn" onclick="copyResult('jwtResultText')">复制结果</button>
+        </div>
+
+          <div class="error-message" id="jwt-error" style="display: none;"></div>
+      \`;
+    }
     `;
 }
