@@ -17,10 +17,10 @@ export default {
       return handleApiRequest(request, path);
     }
 
-    // // 静态资源
-    // if (path.startsWith('/assets/')) {
-    //   return handleStaticAssets(path);
-    // }
+    // 静态资源
+    if (path.startsWith('/assets/')) {
+      return handleStaticAssets(path);
+    }
 
     return new Response(notFoundPage(), {
       status: 404,
@@ -41,6 +41,39 @@ async function handleApiRequest(request, path) {
   }
 }
 
+// 静态资源处理
+function handleStaticAssets(path) {
+  // 这里可以添加 CSS、JS、图片等静态资源
+  if (path === '/assets/style.css') {
+    return new Response(getStyles(), {
+      headers: { 
+        'Content-Type': 'text/css',
+        ...corsHeaders()
+      }
+    });
+  }
+  
+  return new Response('Not Found', { status: 404 });
+}
+
+// 工具函数
+function corsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
+}
+
+function jsonResponse(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...corsHeaders()
+    },
+  });
+}
 
 function mainPage() {
   return `<!DOCTYPE html>
