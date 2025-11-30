@@ -536,7 +536,7 @@ function mainPage() {
                 </div>
 
                 <div class="tools-grid" id="toolsGrid">
-                    <!-- 工具卡片将通过 JavaScript 动态生成 -->
+                   
                 </div>
 
                 <div class="tool-content" id="toolContent">
@@ -1073,60 +1073,7 @@ function getScript() {
                 </div>
             \`;
 
-            // 加载具体工具界面
-            loadToolInterface(toolId);
-        }
-
-        // 加载工具界面
-        function loadToolInterface(toolId) {
-            const interfaceDiv = document.getElementById('toolInterface');
-        
-            switch (toolId) {
-                case 'base64':
-                    interfaceDiv.innerHTML = getBase64Interface();
-                    initBase64Tool();
-                    break;
-                case 'json':
-                    interfaceDiv.innerHTML = getJsonInterface();
-                    initJsonTool();
-                    break;
-                case 'url':
-                    interfaceDiv.innerHTML = getUrlInterface();
-                    initUrlTool();
-                    break;
-                case 'hash':
-                    interfaceDiv.innerHTML = getHashInterface();
-                    initHashTool();
-                    break;
-                case 'jwt':
-                    interfaceDiv.innerHTML = getJwtInterface();
-                    initJwtTool();
-                    break;
-                case 'timestamp':
-                    interfaceDiv.innerHTML = getTimestampInterface();
-                    initTimestampTool();
-                    break;
-                case 'uuid':
-                    interfaceDiv.innerHTML = getUuidInterface();
-                    initUuidTool();
-                    break;
-                case 'qr':
-                    interfaceDiv.innerHTML = getQrInterface();
-                    initQrTool();
-                    break;
-                case 'cron':
-                    interfaceDiv.innerHTML = getCronInterface();
-                    initCronTool();
-                    break;
-                case 'color':
-                    interfaceDiv.innerHTML = getColorInterface();
-                    initColorTool();
-                    break;
-                case 'yaml':
-                    interfaceDiv.innerHTML = getYamlInterface();
-                    initYamlTool();
-                    break;
-            }
-        }
+            
+        }      
     `;
 }
