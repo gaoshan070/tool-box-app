@@ -1,21 +1,13 @@
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request) {
     const url = new URL(request.url);
     const path = url.pathname;
-
-    // CORS 处理
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        headers: corsHeaders(),
-      });
-    }
 
     // 路由处理
     if (path === '/' || path === '/index.html') {
       return new Response(mainPage(), {
         headers: { 
           'Content-Type': 'text/html; charset=utf-8',
-          ...corsHeaders()
         },
       });
     }
@@ -41,7 +33,7 @@ export default {
 async function handleApiRequest(request, path) {
   try {
     switch (path) {
-      case '/api/base64-encode':
+        case '/api/base64-encode':
         return await handleBase64Encode(request);
       case '/api/base64-decode':
         return await handleBase64Decode(request);
@@ -490,7 +482,6 @@ function yamlToJson(yaml) {
   
   return result;
 }
-
 // 静态资源处理
 function handleStaticAssets(path) {
   // 这里可以添加 CSS、JS、图片等静态资源
@@ -525,78 +516,75 @@ function jsonResponse(data, status = 200) {
   });
 }
 
-// 主页面 HTML
 function mainPage() {
   return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>开发者工具集合 - CloudFlare Workers</title>
-    <style>${getStyles()}</style>
-</head>
-<body>
-    <div class="container">
-        <header class="header">
-            <h1>🛠️ 开发者工具集合</h1>
-            <p>在 CloudFlare Workers 上运行的在线开发工具</p>
-        </header>
+    <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Developer ToolBox</title>
+            <style>${getStyles()}</style>
+        </head>
+        <body>
+            <div class="container">
+                <header class="header">
+                    <h1>🛠️ Developer Tools</h1>            
+                </header>
 
-        <div class="search-box">
-            <input type="text" id="toolSearch" placeholder="搜索工具..." class="search-input">
-        </div>
+                <div class="search-box">
+                    <input type="text" id="toolSearch" placeholder="Search tools..." class="search-input">
+                </div>
 
-        <div class="tools-grid" id="toolsGrid">
-            <!-- 工具卡片将通过 JavaScript 动态生成 -->
-        </div>
+                <div class="tools-grid" id="toolsGrid">
+                   
+                </div>
 
-        <div class="tool-content" id="toolContent">
-            <div class="welcome-message" id="welcomeMessage">
-                <h2>👋 欢迎使用开发者工具集合</h2>
-                <p>请从左侧选择您需要的工具，或者使用搜索功能快速查找。</p>
-                <div class="feature-list">
-                    <div class="feature">
-                        <h3>🚀 快速高效</h3>
-                        <p>所有工具都在 CloudFlare Edge 网络运行，响应迅速</p>
-                    </div>
-                    <div class="feature">
-                        <h3>🔒 隐私安全</h3>
-                        <p>您的数据不会离开浏览器，处理过程安全可靠</p>
-                    </div>
-                    <div class="feature">
-                        <h3>🆓 完全免费</h3>
-                        <p>所有工具免费使用，无需注册或登录</p>
+                <div class="tool-content" id="toolContent">
+                    <div class="welcome-message" id="welcomeMessage">
+                        <h2>👋 Welcome to use the developer tool box</h2>
+                        <p>请从左侧选择您需要的工具，或者使用搜索功能快速查找。</p>
+                        <div class="feature-list">
+                            <div class="feature">
+                                <h3>🚀 快速高效</h3>
+                                <p>所有工具都在 CloudFlare Edge 网络运行，响应迅速</p>
+                            </div>
+                            <div class="feature">
+                                <h3>🔒 隐私安全</h3>
+                                <p>您的数据不会离开浏览器，处理过程安全可靠</p>
+                            </div>
+                            <div class="feature">
+                                <h3>🆓 完全免费</h3>
+                                <p>所有工具免费使用，无需注册或登录</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <script>${getScript()}</script>
-</body>
-</html>`;
+            <script>${getScript()}</script>
+        </body>
+    </html>`;
 }
 
 // 404 页面
 function notFoundPage() {
   return `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>页面未找到 - 开发者工具集合</title>
-    <style>${getStyles()}</style>
-</head>
-<body>
-    <div class="container">
-        <div class="error-page">
-            <h1>404</h1>
-            <p>页面未找到</p>
-            <a href="/" class="btn">返回首页</a>
-        </div>
-    </div>
-</body>
-</html>`;
+        <html lang="zh-CN">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Page Not Found</title>
+                <style>${getStyles()}</style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="error-page">
+                        <h1>404</h1>
+                        <p>Page Not Found</p>
+                        <a href="/" class="btn">Index</a>
+                    </div>
+                </div>
+            </body>
+        </html>`;
 }
 
 // CSS 样式
@@ -967,182 +955,181 @@ function getStyles() {
   `;
 }
 
-// JavaScript 代码
 function getScript() {
-  return `
-    // 工具定义
-    const tools = [
-      {
-        id: 'base64',
-        name: 'Base64 编码/解码',
-        description: '文本和文件的 Base64 编码与解码',
-        icon: '🔤'
-      },
-      {
-        id: 'json',
-        name: 'JSON 格式化',
-        description: 'JSON 数据格式化、验证和压缩',
-        icon: '📄'
-      },
-      {
-        id: 'url',
-        name: 'URL 编码/解码',
-        description: 'URL 编码和解码工具',
-        icon: '🔗'
-      },
-      {
-        id: 'hash',
-        name: '哈希生成器',
-        description: '生成文本的 MD5、SHA1、SHA256 等哈希值',
-        icon: '🔒'
-      },
-      {
-        id: 'jwt',
-        name: 'JWT 解码器',
-        description: '解析和解码 JWT 令牌',
-        icon: '🎫'
-      },
-      {
-        id: 'timestamp',
-        name: '时间戳转换',
-        description: '时间戳与日期时间相互转换',
-        icon: '⏰'
-      },
-      {
-        id: 'uuid',
-        name: 'UUID 生成器',
-        description: '生成 UUID 唯一标识符',
-        icon: '🆔'
-      },
-      {
-        id: 'qr',
-        name: 'QR 码生成器',
-        description: '生成 QR 二维码',
-        icon: '📱'
-      },
-      {
-        id: 'cron',
-        name: 'Cron 解析器',
-        description: '解析 Cron 表达式',
-        icon: '⏱️'
-      },
-      {
-        id: 'color',
-        name: '颜色转换器',
-        description: '颜色格式转换 (HEX, RGB, HSL)',
-        icon: '🎨'
-      },
-      {
-        id: 'yaml',
-        name: 'YAML 转换器',
-        description: 'JSON 与 YAML 相互转换',
-        icon: '⚙️'
-      }
-    ];
+    return `
+        // 工具定义
+        const tools = [
+            {
+                id: 'base64',
+                name: 'Base64 encode/decode',
+                description: '文本和文件的 Base64 编码与解码',
+                icon: '🔤'
+            },
+            {
+                id: 'json',
+                name: 'JSON 格式化',
+                description: 'JSON 数据格式化、验证和压缩',
+                icon: '📄'
+            },
+            {
+                id: 'url',
+                name: 'URL 编码/解码',
+                description: 'URL 编码和解码工具',
+                icon: '🔗'
+            },
+            {
+                id: 'hash',
+                name: '哈希生成器',
+                description: '生成文本的 MD5、SHA1、SHA256 等哈希值',
+                icon: '🔒'
+            },
+            {
+                id: 'jwt',
+                name: 'JWT 解码器',
+                description: '解析和解码 JWT 令牌',
+                icon: '🎫'
+            },
+            {
+                id: 'timestamp',
+                name: '时间戳转换',
+                description: '时间戳与日期时间相互转换',
+                icon: '⏰'
+            },
+            {
+                id: 'uuid',
+                name: 'UUID 生成器',
+                description: '生成 UUID 唯一标识符',
+                icon: '🆔'
+            },
+            {
+                id: 'qr',
+                name: 'QR 码生成器',
+                description: '生成 QR 二维码',
+                icon: '📱'
+            },
+            {
+                id: 'cron',
+                name: 'Cron 解析器',
+                description: '解析 Cron 表达式',
+                icon: '⏱️'
+            },
+            {
+                id: 'color',
+                name: '颜色转换器',
+                description: '颜色格式转换 (HEX, RGB, HSL)',
+                icon: '🎨'
+            },
+            {
+                id: 'yaml',
+                name: 'YAML 转换器',
+                description: 'JSON 与 YAML 相互转换',
+                icon: '⚙️'
+            }
+        ];
 
-    // DOM 元素
-    const toolsGrid = document.getElementById('toolsGrid');
-    const toolContent = document.getElementById('toolContent');
-    const welcomeMessage = document.getElementById('welcomeMessage');
-    const toolSearch = document.getElementById('toolSearch');
+        // DOM 元素
+        const toolsGrid = document.getElementById('toolsGrid');
+        const toolContent = document.getElementById('toolContent');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const toolSearch = document.getElementById('toolSearch');
 
-    // 初始化工具网格
-    function initToolsGrid() {
-      toolsGrid.innerHTML = '';
-      tools.forEach(tool => {
-        const toolCard = document.createElement('div');
-        toolCard.className = 'tool-card';
-        toolCard.innerHTML = \`
-          <h3>\${tool.icon} \${tool.name}</h3>
-          <p>\${tool.description}</p>
-        \`;
-        toolCard.addEventListener('click', () => showTool(tool.id));
-        toolsGrid.appendChild(toolCard);
-      });
-    }
-
-    // 显示工具界面
-    function showTool(toolId) {
-      // 更新活动卡片
-      document.querySelectorAll('.tool-card').forEach(card => {
-        card.classList.remove('active');
-      });
-      document.querySelectorAll('.tool-card').forEach(card => {
-        if (card.querySelector('h3').textContent.includes(tools.find(t => t.id === toolId).name)) {
-          card.classList.add('active');
+        // 初始化工具网格
+        function initToolsGrid() {
+            toolsGrid.innerHTML = "";
+            tools.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.innerHTML = \`
+                <h3>\${tool.icon} \${tool.name}</h3>
+                <p>\${tool.description}</p>
+                \`;
+                toolCard.addEventListener('click', () => showTool(tool.id));
+                toolsGrid.appendChild(toolCard);
+            });
         }
-      });
 
-      // 隐藏欢迎信息
-      welcomeMessage.style.display = 'none';
+        // 显示工具界面
+        function showTool(toolId) {
+            // 更新活动卡片
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelectorAll('.tool-card').forEach(card => {
+                if (card.querySelector('h3').textContent.includes(tools.find(t => t.id === toolId).name)) {
+                card.classList.add('active');
+                }
+            });
 
-      // 显示工具内容
-      const tool = tools.find(t => t.id === toolId);
-      toolContent.innerHTML = \`
-        <div class="tool-panel">
-          <h2>\${tool.icon} \${tool.name}</h2>
-          <p class="description">\${tool.description}</p>
-          <div id="toolInterface"></div>
-        </div>
-      \`;
+            // 隐藏欢迎信息
+            welcomeMessage.style.display = 'none';
 
-      // 加载具体工具界面
-      loadToolInterface(toolId);
-    }
+            // 显示工具内容
+            const tool = tools.find(t => t.id === toolId);
+            toolContent.innerHTML = \`
+                <div class="tool-panel">
+                <h2>\${tool.icon} \${tool.name}</h2>
+                <p class="description">\${tool.description}</p>
+                <div id="toolInterface"></div>
+                </div>
+            \`;
 
-    // 加载工具界面
-    function loadToolInterface(toolId) {
-      const interfaceDiv = document.getElementById('toolInterface');
-      
-      switch (toolId) {
-        case 'base64':
-          interfaceDiv.innerHTML = getBase64Interface();
-          initBase64Tool();
-          break;
-        case 'json':
-          interfaceDiv.innerHTML = getJsonInterface();
-          initJsonTool();
-          break;
-        case 'url':
-          interfaceDiv.innerHTML = getUrlInterface();
-          initUrlTool();
-          break;
-        case 'hash':
-          interfaceDiv.innerHTML = getHashInterface();
-          initHashTool();
-          break;
-        case 'jwt':
-          interfaceDiv.innerHTML = getJwtInterface();
-          initJwtTool();
-          break;
-        case 'timestamp':
-          interfaceDiv.innerHTML = getTimestampInterface();
-          initTimestampTool();
-          break;
-        case 'uuid':
-          interfaceDiv.innerHTML = getUuidInterface();
-          initUuidTool();
-          break;
-        case 'qr':
-          interfaceDiv.innerHTML = getQrInterface();
-          initQrTool();
-          break;
-        case 'cron':
-          interfaceDiv.innerHTML = getCronInterface();
-          initCronTool();
-          break;
-        case 'color':
-          interfaceDiv.innerHTML = getColorInterface();
-          initColorTool();
-          break;
-        case 'yaml':
-          interfaceDiv.innerHTML = getYamlInterface();
-          initYamlTool();
-          break;
-      }
-    }
+            // 加载具体工具界面
+            loadToolInterface(toolId);
+        }
 
-    // Base64 工具界面
+        // 加载工具界面
+        function loadToolInterface(toolId) {
+            const interfaceDiv = document.getElementById('toolInterface');
+        
+            switch (toolId) {
+                case 'base64':
+                    interfaceDiv.innerHTML = getBase64Interface();
+                    initBase64Tool();
+                    break;
+                case 'json':
+                    interfaceDiv.innerHTML = getJsonInterface();
+                    initJsonTool();
+                    break;
+                case 'url':
+                    interfaceDiv.innerHTML = getUrlInterface();
+                    initUrlTool();
+                    break;
+                case 'hash':
+                    interfaceDiv.innerHTML = getHashInterface();
+                    initHashTool();
+                    break;
+                case 'jwt':
+                    interfaceDiv.innerHTML = getJwtInterface();
+                    initJwtTool();
+                    break;
+                case 'timestamp':
+                    interfaceDiv.innerHTML = getTimestampInterface();
+                    initTimestampTool();
+                    break;
+                case 'uuid':
+                    interfaceDiv.innerHTML = getUuidInterface();
+                    initUuidTool();
+                    break;
+                case 'qr':
+                    interfaceDiv.innerHTML = getQrInterface();
+                    initQrTool();
+                    break;
+                case 'cron':
+                    interfaceDiv.innerHTML = getCronInterface();
+                    initCronTool();
+                    break;
+                case 'color':
+                    interfaceDiv.innerHTML = getColorInterface();
+                    initColorTool();
+                    break;
+                case 'yaml':
+                    interfaceDiv.innerHTML = getYamlInterface();
+                    initYamlTool();
+                    break;
+            }
+        }
+
+        // Base64 工具界面
     function getBase64Interface() {
       return \`
         <div class="option-group">
@@ -1180,8 +1167,299 @@ function getScript() {
       \`;
     }
 
-    // 其他工具界面函数 (为简洁起见，这里只展示 Base64 的完整实现)
-    // 实际部署时需要为每个工具实现相应的界面和功能
+    //Encode url interface
+    // URL 工具界面
+    function getUrlInterface() {
+      return \`
+        <div class="option-group">
+          <button class="option-btn active" onclick="switchUrlMode('encode')">URL 编码</button>
+          <button class="option-btn" onclick="switchUrlMode('decode')">URL 解码</button>
+        </div>
+        
+        <div id="urlEncodeSection">
+          <div class="input-group">
+            <label>输入文本（需要编码）</label>
+            <textarea class="textarea" id="urlEncodeInput" placeholder="输入需要URL编码的文本..."></textarea>
+          </div>
+          <button class="btn" onclick="urlEncode()">编码</button>
+        </div>
+        
+        <div id="urlDecodeSection" style="display: none">
+          <div class="input-group">
+            <label>URL 编码字符串（需要解码）</label>
+            <textarea class="textarea" id="urlDecodeInput" placeholder="输入需要URL解码的字符串..."></textarea>
+          </div>
+          <button class="btn" onclick="urlDecode()">解码</button>
+        </div>
+        
+        <div class="result-area" id="urlResult" style="display: none">
+          <h3>结果</h3>
+          <pre class="result-pre" id="urlResultText"></pre>
+          <button class="btn" onclick="copyResult('urlResultText')" style="margin-top: 12px">复制结果</button>
+        </div>
+      \`;
+    }
+
+    // 初始化 URL 工具
+    function initUrlTool() {
+      window.switchUrlMode = function(mode) {
+        document.querySelectorAll('#urlEncodeSection, #urlDecodeSection').forEach(el => {
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        
+        if (mode === 'encode') {
+          document.getElementById('urlEncodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchUrlMode(\'encode\')"]').classList.add('active');
+        } else {
+          document.getElementById('urlDecodeSection').style.display = 'block';
+          document.querySelector('.option-btn[onclick="switchUrlMode(\'decode\')"]').classList.add('active');
+        }
+        
+        // 隐藏之前的结果
+        document.getElementById('urlResult').style.display = 'none';
+      };
+
+      window.urlEncode = async function() {
+        const text = document.getElementById('urlEncodeInput').value.trim();
+        
+        if (!text) {
+          showError('urlResult', '请输入需要编码的文本');
+          return;
+        }
+        
+        try {
+          showLoading('urlResult', true);
+          const result = await callApi('url-encode', { text });
+          showResult('urlResult', result.encoded || result.result);
+        } catch (error) {
+          showError('urlResult', error.message);
+        } finally {
+          showLoading('urlResult', false);
+        }
+      };
+
+      window.urlDecode = async function() {
+        const text = document.getElementById('urlDecodeInput').value.trim();
+        
+        if (!text) {
+          showError('urlResult', '请输入需要解码的URL编码字符串');
+          return;
+        }
+        
+        try {
+          showLoading('urlResult', true);
+          const result = await callApi('url-decode', { text });
+          showResult('urlResult', result.decoded || result.result);
+        } catch (error) {
+          showError('urlResult', error.message);
+        } finally {
+          showLoading('urlResult', false);
+        }
+      };
+    }
+
+    // 显示/隐藏加载状态
+    function showLoading(containerId, show) {
+      const container = document.getElementById(containerId);
+      let loadingElement = document.getElementById(containerId + 'Loading');
+      
+      if (show) {
+        if (!loadingElement) {
+          loadingElement = document.createElement('div');
+          loadingElement.id = containerId + 'Loading';
+          loadingElement.className = 'loading active';
+          loadingElement.innerHTML = \`
+            <div class="spinner"></div>
+            <p>处理中...</p>
+          \`;
+          container.parentNode.insertBefore(loadingElement, container);
+        } else {
+          loadingElement.className = 'loading active';
+        }
+        container.style.display = 'none';
+      } else {
+        if (loadingElement) {
+          loadingElement.className = 'loading';
+        }
+      }
+    }
+    //End of url interface
+
+    //Harsh interface
+    // 哈希生成器工具界面
+    function getHashInterface() {
+  return \`
+    <div class="input-group">
+      <label>输入文本</label>
+      <textarea class="textarea" id="hashInput" placeholder="输入需要生成哈希值的文本..."></textarea>
+    </div>
+    
+    <div class="input-group">
+      <label>选择哈希算法</label>
+      <div class="option-group">
+        <button class="option-btn active" onclick="selectHashAlgorithm('md5')">MD5</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha1')">SHA1</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha256')">SHA256</button>
+        <button class="option-btn" onclick="selectHashAlgorithm('sha512')">SHA512</button>
+      </div>
+    </div>
+    
+    <div class="file-upload" onclick="document.getElementById('hashFileInput').click()">
+      <p>📁 或拖放文件到这里生成文件哈希</p>
+      <input type="file" id="hashFileInput" style="display: none" onchange="handleHashFileSelect(this.files[0])">
+    </div>
+    
+    <button class="btn" onclick="generateHash()">生成哈希值</button>
+    
+    <div class="result-area" id="hashResult" style="display: none">
+      <h3>哈希结果</h3>
+      <div style="margin-bottom: 12px;">
+        <strong>算法:</strong> <span id="hashAlgorithmLabel">MD5</span>
+      </div>
+      <pre class="result-pre" id="hashResultText"></pre>
+      <button class="btn" onclick="copyResult('hashResultText')" style="margin-top: 12px">复制哈希值</button>
+    </div>
+    
+    <div class="feature-list" style="margin-top: 40px;">
+      <div class="feature">
+        <h3>MD5</h3>
+        <p>128位哈希值，常用于文件校验</p>
+      </div>
+      <div class="feature">
+        <h3>SHA1</h3>
+        <p>160位哈希值，安全性高于MD5</p>
+      </div>
+      <div class="feature">
+        <h3>SHA256</h3>
+        <p>256位哈希值，比特币使用</p>
+      </div>
+      <div class="feature">
+        <h3>SHA512</h3>
+        <p>512位哈希值，最高安全性</p>
+      </div>
+    </div>
+  \`;
+}
+
+    // 初始化哈希工具
+    function initHashTool() {
+      window.currentHashAlgorithm = 'md5';
+      window.currentHashFile = null;
+
+      window.selectHashAlgorithm = function(algorithm) {
+        window.currentHashAlgorithm = algorithm;
+        
+        // 更新按钮状态
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`.option-btn[onclick="selectHashAlgorithm('${algorithm}')"]`).classList.add('active');
+        
+        // 更新算法标签
+        document.getElementById('hashAlgorithmLabel').textContent = algorithm.toUpperCase();
+      };
+
+      window.handleHashFileSelect = function(file) {
+        if (!file) return;
+        
+        window.currentHashFile = file;
+        document.getElementById('hashInput').value = \`文件已选择: \${file.name} (\${(file.size / 1024).toFixed(2)} KB)\`;
+      };
+
+      window.generateHash = async function() {
+        const text = document.getElementById('hashInput').value.trim();
+        const algorithm = window.currentHashAlgorithm;
+        const file = window.currentHashFile;
+        
+        if (!text && !file) {
+          showError('hashResult', '请输入文本或选择文件');
+          return;
+        }
+        
+        try {
+          showLoading('hashResult', true);
+          
+          let requestData;
+          if (file) {
+            // 处理文件哈希
+            const fileBuffer = await readFileAsArrayBuffer(file);
+            requestData = {
+              algorithm: algorithm,
+              file: arrayBufferToBase64(fileBuffer),
+              fileName: file.name
+            };
+          } else {
+            // 处理文本哈希
+            requestData = {
+              algorithm: algorithm,
+              text: text
+            };
+          }
+          
+          const result = await callApi('hash-generate', requestData);
+          showResult('hashResult', result.hash || result.result);
+          
+          // 确保算法标签是最新的
+          document.getElementById('hashAlgorithmLabel').textContent = algorithm.toUpperCase();
+          
+        } catch (error) {
+          showError('hashResult', error.message);
+        } finally {
+          showLoading('hashResult', false);
+        }
+      };
+
+      // 读取文件为ArrayBuffer
+      window.readFileAsArrayBuffer = function(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            resolve(e.target.result);
+          };
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(file);
+        });
+      };
+
+      // 将ArrayBuffer转换为Base64
+      window.arrayBufferToBase64 = function(buffer) {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+      };
+
+      // 添加拖放文件支持
+      const toolContent = document.getElementById('toolContent');
+      toolContent.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '#f0f9ff';
+      });
+
+      toolContent.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '';
+      });
+
+      toolContent.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.style.backgroundColor = '';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleHashFileSelect(files[0]);
+        }
+      });
+    }
+    //End of harsh interface
 
     // 搜索功能
     function initSearch() {
@@ -1200,8 +1478,7 @@ function getScript() {
     }
 
     // API 调用函数
-    async function callApi(endpoint, data) {
-      try {
+    async function callApi(endpoint, data) {      
         const response = await fetch(\`/api/\${endpoint}\`, {
           method: 'POST',
           headers: {
@@ -1211,13 +1488,12 @@ function getScript() {
         });
         
         if (!response.ok) {
-          throw new Error('API request failed');
+          const errorText = await response.text();
+          const parsedError = JSON.parse(errorText)
+          throw new Error(parsedError.error || \`Failed to call \${endpoint} API \`);
         }
         
-        return await response.json();
-      } catch (error) {
-        throw new Error('网络请求失败: ' + error.message);
-      }
+        return await response.json();      
     }
 
     // 工具初始化
@@ -1232,10 +1508,10 @@ function getScript() {
         
         if (mode === 'encode') {
           document.getElementById('base64EncodeSection').style.display = 'block';
-          document.querySelector('.option-btn[onclick="switchBase64Mode(\\'encode\\')"]').classList.add('active');
+          document.querySelector('.option-btn[onclick="switchBase64Mode(\'encode\')"]').classList.add('active');
         } else {
           document.getElementById('base64DecodeSection').style.display = 'block';
-          document.querySelector('.option-btn[onclick="switchBase64Mode(\\'decode\\')"]').classList.add('active');
+          document.querySelector('.option-btn[onclick="switchBase64Mode(\'decode\')"]').classList.add('active');
         }
       };
 
@@ -1275,6 +1551,48 @@ function getScript() {
       };
     }
 
+    function initJsonTool() {
+      window.jsonFormat = function(action) {
+        document.querySelectorAll('.option-btn').forEach(btn => {
+          btn.classList.remove('active');
+        });
+        document.querySelector(`.option-btn[onclick="jsonFormat('${action}')"]`).classList.add('active');
+        window.currentJsonAction = action;
+      };
+
+      window.processJson = async function() {
+        const jsonData = document.getElementById('jsonInput').value;
+        const action = window.currentJsonAction || 'format';
+        
+        try {
+          const result = await callApi('json-format', { json: jsonData, action });
+          showResult('jsonResult', \${result.result});
+        } catch (error) {          
+          showError('jsonResult', error.message);
+        }
+      };
+    }
+    
+    function initJwtTool() {
+      window.decodeJwt = async function() {
+        const jwtToken = document.getElementById('jwtInput').value;
+        
+        try {
+          const result = await callApi('jwt-decode', { token: jwtToken });          
+          showResult('jwtResult', JSON.stringify(result, null, 2));
+        } catch (error) {
+          showError('jwtResult', error.message);
+        }
+      };
+
+      window.clearJwt = function() {
+        document.getElementById('jwtInput').value = '';
+        document.getElementById('jwtResult').style.display = 'none';
+        document.getElementById('jwt-error').style.display = 'none';
+      };
+
+    }
+    
     // 显示结果
     function showResult(containerId, content) {
       const container = document.getElementById(containerId);
@@ -1327,7 +1645,26 @@ function getScript() {
       </div>\`;
     }
 
-    // 其他工具界面类似，为节省篇幅这里省略...
-    // 在实际部署中需要为每个工具实现完整的界面和功能
-  `;
+    function getJwtInterface() {
+      return \`
+          <div class="input-group">
+              <label for="jwtInput">JWT Token</label>
+              <textarea class="textarea" id="jwtInput" placeholder="输入 JWT Token..."></textarea>
+          </div>
+
+          <div class="action-buttons" style="display: flex; gap: 12px; margin-bottom: 20px;">
+              <button class="btn" onclick="decodeJwt()" id="jwt-decode-btn">解析 JWT</button>
+              <button class="btn" style="background: #6b7280;" onclick="clearJwt()">清空</button>              
+          </div>
+
+         <div class="result-area" id="jwtResult" style="display: none">
+          <h3>结果</h3>
+          <pre class="result-pre" id="jwtResultText"></pre>
+          <button class="btn" onclick="copyResult('jwtResultText')">复制结果</button>
+        </div>
+
+          <div class="error-message" id="jwt-error" style="display: none;"></div>
+      \`;
+    }
+    `;
 }
