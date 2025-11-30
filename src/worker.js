@@ -560,6 +560,7 @@ function mainPage() {
                     </div>
                 </div>
             </div>
+            <script>${getScript()}</script>
         </body>
     </html>`;
 }
@@ -952,4 +953,180 @@ function getStyles() {
       }
     }
   `;
+}
+
+function getScript() {
+    return `
+        // 工具定义
+        const tools = [
+            {
+                id: 'base64',
+                name: 'Base64 encode/decode',
+                description: '文本和文件的 Base64 编码与解码',
+                icon: '🔤'
+            },
+            {
+                id: 'json',
+                name: 'JSON 格式化',
+                description: 'JSON 数据格式化、验证和压缩',
+                icon: '📄'
+            },
+            {
+                id: 'url',
+                name: 'URL 编码/解码',
+                description: 'URL 编码和解码工具',
+                icon: '🔗'
+            },
+            {
+                id: 'hash',
+                name: '哈希生成器',
+                description: '生成文本的 MD5、SHA1、SHA256 等哈希值',
+                icon: '🔒'
+            },
+            {
+                id: 'jwt',
+                name: 'JWT 解码器',
+                description: '解析和解码 JWT 令牌',
+                icon: '🎫'
+            },
+            {
+                id: 'timestamp',
+                name: '时间戳转换',
+                description: '时间戳与日期时间相互转换',
+                icon: '⏰'
+            },
+            {
+                id: 'uuid',
+                name: 'UUID 生成器',
+                description: '生成 UUID 唯一标识符',
+                icon: '🆔'
+            },
+            {
+                id: 'qr',
+                name: 'QR 码生成器',
+                description: '生成 QR 二维码',
+                icon: '📱'
+            },
+            {
+                id: 'cron',
+                name: 'Cron 解析器',
+                description: '解析 Cron 表达式',
+                icon: '⏱️'
+            },
+            {
+                id: 'color',
+                name: '颜色转换器',
+                description: '颜色格式转换 (HEX, RGB, HSL)',
+                icon: '🎨'
+            },
+            {
+                id: 'yaml',
+                name: 'YAML 转换器',
+                description: 'JSON 与 YAML 相互转换',
+                icon: '⚙️'
+            }
+        ];
+
+        // DOM 元素
+        const toolsGrid = document.getElementById('toolsGrid');
+        const toolContent = document.getElementById('toolContent');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const toolSearch = document.getElementById('toolSearch');
+
+        // 初始化工具网格
+        function initToolsGrid() {
+            toolsGrid.innerHTML = "";
+            tools.forEach(tool => {
+                const toolCard = document.createElement('div');
+                toolCard.className = 'tool-card';
+                toolCard.innerHTML = \`
+                <h3>${tool.icon} ${tool.name}</h3>
+                <p>${tool.description}</p>
+                \`;
+                toolCard.addEventListener('click', () => showTool(tool.id));
+                toolsGrid.appendChild(toolCard);
+            });
+        }
+
+        // 显示工具界面
+        function showTool(toolId) {
+            // 更新活动卡片
+            document.querySelectorAll('.tool-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            document.querySelectorAll('.tool-card').forEach(card => {
+                if (card.querySelector('h3').textContent.includes(tools.find(t => t.id === toolId).name)) {
+                card.classList.add('active');
+                }
+            });
+
+            // 隐藏欢迎信息
+            welcomeMessage.style.display = 'none';
+
+            // 显示工具内容
+            const tool = tools.find(t => t.id === toolId);
+            toolContent.innerHTML = \`
+                <div class="tool-panel">
+                <h2>${tool.icon} ${tool.name}</h2>
+                <p class="description">${tool.description}</p>
+                <div id="toolInterface"></div>
+                </div>
+            \`;
+
+            // 加载具体工具界面
+            loadToolInterface(toolId);
+        }
+
+        // 加载工具界面
+        function loadToolInterface(toolId) {
+            const interfaceDiv = document.getElementById('toolInterface');
+        
+            switch (toolId) {
+                case 'base64':
+                    interfaceDiv.innerHTML = getBase64Interface();
+                    initBase64Tool();
+                    break;
+                case 'json':
+                    interfaceDiv.innerHTML = getJsonInterface();
+                    initJsonTool();
+                    break;
+                case 'url':
+                    interfaceDiv.innerHTML = getUrlInterface();
+                    initUrlTool();
+                    break;
+                case 'hash':
+                    interfaceDiv.innerHTML = getHashInterface();
+                    initHashTool();
+                    break;
+                case 'jwt':
+                    interfaceDiv.innerHTML = getJwtInterface();
+                    initJwtTool();
+                    break;
+                case 'timestamp':
+                    interfaceDiv.innerHTML = getTimestampInterface();
+                    initTimestampTool();
+                    break;
+                case 'uuid':
+                    interfaceDiv.innerHTML = getUuidInterface();
+                    initUuidTool();
+                    break;
+                case 'qr':
+                    interfaceDiv.innerHTML = getQrInterface();
+                    initQrTool();
+                    break;
+                case 'cron':
+                    interfaceDiv.innerHTML = getCronInterface();
+                    initCronTool();
+                    break;
+                case 'color':
+                    interfaceDiv.innerHTML = getColorInterface();
+                    initColorTool();
+                    break;
+                case 'yaml':
+                    interfaceDiv.innerHTML = getYamlInterface();
+                    initYamlTool();
+                    break;
+            }
+        }
+    `;
 }

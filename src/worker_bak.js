@@ -1179,9 +1179,6 @@ function getScript() {
       \`;
     }
 
-    // 其他工具界面函数 (为简洁起见，这里只展示 Base64 的完整实现)
-    // 实际部署时需要为每个工具实现相应的界面和功能
-
     //Encode url interface
     // URL 工具界面
     function getUrlInterface() {
