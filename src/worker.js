@@ -37,7 +37,8 @@ function mainPage() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Box</title>
+    <title>Developer ToolBox</title>
+    <style>${getStyles()}</style>
 </head>
 <body>
     <div class="container">
@@ -77,4 +78,372 @@ function mainPage() {
     
 </body>
 </html>`;
+}
+
+// CSS 样式
+function getStyles() {
+  return `
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      grid-template-rows: auto 1fr;
+      min-height: 100vh;
+      gap: 0;
+    }
+    
+    .header {
+      grid-column: 1 / -1;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .header p {
+      color: #6b7280;
+      font-size: 1.1rem;
+    }
+    
+    .search-box {
+      grid-column: 1;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-right: 1px solid #e5e7eb;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .tools-grid {
+      grid-column: 1;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      border-right: 1px solid #e5e7eb;
+      overflow-y: auto;
+      max-height: calc(100vh - 200px);
+    }
+    
+    .tool-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tool-card:hover {
+      border-color: #4f46e5;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+    
+    .tool-card.active {
+      border-color: #4f46e5;
+      background: #eef2ff;
+    }
+    
+    .tool-card h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #1f2937;
+    }
+    
+    .tool-card p {
+      font-size: 14px;
+      color: #6b7280;
+    }
+    
+    .tool-content {
+      grid-column: 2;
+      background: white;
+      padding: 40px;
+      overflow-y: auto;
+    }
+    
+    .welcome-message {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+    
+    .welcome-message h2 {
+      font-size: 2rem;
+      margin-bottom: 16px;
+      color: #1f2937;
+    }
+    
+    .welcome-message p {
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin-bottom: 40px;
+    }
+    
+    .feature-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+    
+    .feature {
+      text-align: center;
+      padding: 24px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+    
+    .feature h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+    
+    .feature p {
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    
+    .tool-panel {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .tool-panel h2 {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+      color: #1f2937;
+    }
+    
+    .tool-panel .description {
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+    
+    .input-group {
+      margin-bottom: 24px;
+    }
+    
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #374151;
+    }
+    
+    .textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 14px;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    
+    .textarea:focus {
+      outline: none;
+      border-color: #4f46e5;
+    }
+    
+    .btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+    }
+    
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .result-area {
+      margin-top: 24px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 4px solid #4f46e5;
+    }
+    
+    .result-area h3 {
+      margin-bottom: 12px;
+      color: #1f2937;
+    }
+    
+    .result-pre {
+      background: white;
+      padding: 16px;
+      border-radius: 6px;
+      border: 1px solid #e5e7eb;
+      overflow-x: auto;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 14px;
+    }
+    
+    .error-message {
+      background: #fef2f2;
+      color: #dc2626;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid #dc2626;
+      margin-top: 16px;
+    }
+    
+    .success-message {
+      background: #f0fdf4;
+      color: #16a34a;
+      padding: 12px 16px;
+      border-radius: 6px;
+      border-left: 4px solid #16a34a;
+      margin-top: 16px;
+    }
+    
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .loading.active {
+      display: block;
+    }
+    
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4f46e5;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .file-upload {
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .file-upload:hover {
+      border-color: #4f46e5;
+      background: #f8fafc;
+    }
+    
+    .option-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .option-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .option-btn.active {
+      border-color: #4f46e5;
+      background: #eef2ff;
+      color: #4f46e5;
+    }
+    
+    .error-page {
+      text-align: center;
+      padding: 100px 20px;
+      color: white;
+    }
+    
+    .error-page h1 {
+      font-size: 6rem;
+      margin-bottom: 16px;
+    }
+    
+    .error-page p {
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto 1fr;
+      }
+      
+      .tools-grid {
+        grid-column: 1;
+        max-height: 200px;
+      }
+      
+      .tool-content {
+        grid-column: 1;
+      }
+      
+      .feature-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  `;
 }
