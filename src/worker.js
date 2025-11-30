@@ -1566,7 +1566,7 @@ function getScript() {
         
         try {
           const result = await callApi('json-format', { json: jsonData, action });
-          showResult('jsonResult', \${result.result});
+          showResult('jsonResult', \`\${result.result}\`);
         } catch (error) {          
           showError('jsonResult', error.message);
         }
